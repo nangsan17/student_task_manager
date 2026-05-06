@@ -1,17 +1,26 @@
-# student_task_manager
+# Student Productivity & Task Management App
 
-A new Flutter project.
+## 📌 Overview
+This project is a mobile application designed to help university students manage academic tasks, deadlines, and improve productivity.
 
-## Getting Started
+## 🎯 Features
+- Smart Task Prioritization
+- Multi-Layer Reminder System
+- Task Management (Add/Edit/Delete)
+- Task Breakdown (Subtasks)
+- Progress Tracking
+- Dashboard Overview
+- Calendar View
+- Focus Mode
+- User Authentication
 
-This project is a starting point for a Flutter application.
+## 🛠️ Tech Stack
+- Flutter
+- Dart
 
-A few resources to get you started if this is your first Flutter project:
+## 📱 Purpose
+This application is developed as part of the Mobile App Engineering course to address real student productivity challenges identified through generative research.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 👨‍💻 Contributors
+- Nang Thet Htar San
+- Nour Mohamed Mahmoud Mohamed Ismail
