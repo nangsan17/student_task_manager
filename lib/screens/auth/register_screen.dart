@@ -22,12 +22,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
+
           child: Container(
             width: 400,
             padding: const EdgeInsets.all(30),
+
             decoration: BoxDecoration(
               color: Colors.white,
+
               borderRadius: BorderRadius.circular(20),
+
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.shade300,
@@ -36,8 +40,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ],
             ),
+
             child: Column(
               mainAxisSize: MainAxisSize.min,
+
               children: [
                 const Icon(Icons.person_add, size: 80, color: Colors.indigo),
 
@@ -45,6 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 const Text(
                   "Create Account 🚀",
+
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 ),
 
@@ -52,7 +59,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 const Text(
                   "Register to start managing your tasks",
+
                   textAlign: TextAlign.center,
+
                   style: TextStyle(color: Colors.grey),
                 ),
 
@@ -60,6 +69,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 TextField(
                   controller: emailController,
+
                   decoration: const InputDecoration(
                     labelText: "Email",
                     prefixIcon: Icon(Icons.email),
@@ -71,6 +81,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextField(
                   controller: passwordController,
                   obscureText: true,
+
                   decoration: const InputDecoration(
                     labelText: "Password",
                     prefixIcon: Icon(Icons.lock),
@@ -81,36 +92,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 SizedBox(
                   width: double.infinity,
+
                   child: ElevatedButton(
                     onPressed: () async {
                       final user = await authService.registerUser(
                         email: emailController.text.trim(),
+
                         password: passwordController.text.trim(),
                       );
 
                       if (user != null) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text("Registration Successful 🚀"),
-    ),
-  );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Registration Successful 🚀"),
+                          ),
+                        );
 
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(
-      builder: (context) => const LoginScreen(),
-    ),
-  );
-} else {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text("Registration Failed ❌"),
-    ),
-  );
-}
+                        Navigator.pushReplacement(
+                          context,
+
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Registration Failed ❌"),
+                          ),
+                        );
+                      }
                     },
+
                     child: const Text(
                       "Register",
+
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -120,8 +136,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                    );
                   },
+
                   child: const Text("Already have an account? Login"),
                 ),
               ],
