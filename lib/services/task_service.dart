@@ -10,12 +10,10 @@ class TaskService {
 
   CollectionReference get _taskCollection => _firestore.collection('tasks');
 
-  // Add task
   Future<void> addTask(TaskModel task) async {
     await _taskCollection.add(task.toMap());
   }
 
-  // Get current user's tasks
   Stream<List<TaskModel>> getTasks() {
     final currentUser = _auth.currentUser;
 
@@ -32,25 +30,26 @@ class TaskService {
         });
   }
 
-  // Delete task
   Future<void> deleteTask(String id) async {
     await _taskCollection.doc(id).delete();
   }
 
-  // Update task status
   Future<void> updateTaskStatus(String id, bool currentStatus) async {
     await _taskCollection.doc(id).update({'isCompleted': !currentStatus});
   }
 
-  // Edit task
   Future<void> editTask(
     String id,
     String newTitle,
     String newDescription,
+    String newPriority,
+    String newDeadline,
   ) async {
     await _taskCollection.doc(id).update({
       'title': newTitle,
       'description': newDescription,
+      'priority': newPriority,
+      'deadline': newDeadline,
     });
   }
 }

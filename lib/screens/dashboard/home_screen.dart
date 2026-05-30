@@ -26,6 +26,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String selectedPriority = 'Low';
 
+  get itemCount => null;
+
   void showAddTaskDialog() {
     showDialog(
       context: context,
@@ -217,6 +219,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   task.id,
                   titleController.text.trim(),
                   descriptionController.text.trim(),
+                  task.priority,
+                  task.deadline,
                 );
 
                 titleController.clear();
@@ -317,6 +321,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       (task) => task.title.toLowerCase().contains(searchQuery),
                     )
                     .toList();
+                final totalTasks = tasks.length;
+                final completedTasks = tasks
+                    .where((task) => task.isCompleted)
+                    .length;
+                final pendingTasks = totalTasks - completedTasks;
 
                 if (tasks.isEmpty) {
                   return const Center(
@@ -329,10 +338,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
 
                 return ListView.builder(
-                  itemCount: tasks.length,
-
+                  itemCount: tasks.length + 1,
                   itemBuilder: (context, index) {
-                    final task = tasks[index];
+                    if (index == 0) {
+                      return Card(
+                        margin: const EdgeInsets.all(10),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            children: [
+                              Text("📋 Total Tasks: $totalTasks"),
+                              Text("✅ Completed: $completedTasks"),
+                              Text("⏳ Pending: $pendingTasks"),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                    final taskIndex = index - 1;
+                    final task = tasks[taskIndex];
 
                     return Card(
                       margin: const EdgeInsets.all(10),
