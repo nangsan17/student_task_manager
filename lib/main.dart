@@ -4,11 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 import 'services/auth_service.dart';
 import 'services/task_service.dart';
 import 'services/notification_service.dart';
 import 'utils/theme.dart';
+import 'screens/onboarding/onboarding_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/dashboard/home_screen.dart';
 
@@ -17,17 +19,19 @@ void main() async {
   if (!kIsWeb) {
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ));
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark));
   }
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   if (!kIsWeb) await NotificationService().init();
-  runApp(const SPTMApp());
+  final prefs = await SharedPreferences.getInstance();
+  final onboardingDone = prefs.getBool('onboarding_done') ?? false;
+  runApp(SPTMApp(showOnboarding: !onboardingDone));
 }
 
 class SPTMApp extends StatelessWidget {
-  const SPTMApp({super.key});
+  final bool showOnboarding;
+  const SPTMApp({super.key, required this.showOnboarding});
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -47,10 +51,9 @@ class SPTMApp extends StatelessWidget {
                       .textScaleFactor
                       .clamp(0.85, 1.15))),
               child: child!);
-          // Web: show as a centered phone-sized window
           if (kIsWeb) {
             content = Scaffold(
-                backgroundColor: const Color(0xFF13131F),
+                backgroundColor: const Color(0xFF0F0F1A),
                 body: Center(
                     child: Container(
                         width: 390,
@@ -59,15 +62,15 @@ class SPTMApp extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                             boxShadow: [
                               BoxShadow(
-                                  color: Colors.black.withOpacity(0.6),
-                                  blurRadius: 50,
-                                  spreadRadius: 5)
+                                  color: Colors.black.withOpacity(0.7),
+                                  blurRadius: 60,
+                                  spreadRadius: 8)
                             ]),
                         child: content)));
           }
           return content;
         },
-        home: const _AuthGate(),
+        home: showOnboarding ? const OnboardingScreen() : const _AuthGate(),
       ),
     );
   }
