@@ -13,6 +13,16 @@ class SubTask {
       SubTask(id: m['id'] ?? '', title: m['title'] ?? '', isDone: m['isDone'] ?? false);
 }
 
+class TaskLocation {
+  final double lat;
+  final double lng;
+  final String address;
+  const TaskLocation({required this.lat, required this.lng, this.address = ''});
+  Map<String, dynamic> toMap() => {'lat': lat, 'lng': lng, 'address': address};
+  factory TaskLocation.fromMap(Map<String, dynamic> m) =>
+      TaskLocation(lat: (m['lat'] as num).toDouble(), lng: (m['lng'] as num).toDouble(), address: m['address'] ?? '');
+}
+
 class TaskModel {
   final String id;
   final String userId;
@@ -26,27 +36,19 @@ class TaskModel {
   final List<SubTask> subtasks;
   final String? imageUrl;
   final int gradeWeight;
+  final TaskLocation? location;
   final DateTime createdAt;
   final DateTime updatedAt;
 
   const TaskModel({
-    required this.id,
-    required this.userId,
-    required this.title,
-    this.description = '',
-    required this.deadline,
-    this.priority = TaskPriority.medium,
-    this.category = TaskCategory.assignment,
-    this.isCompleted = false,
-    this.progress = 0.0,
-    this.subtasks = const [],
-    this.imageUrl,
-    this.gradeWeight = 0,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.id, required this.userId, required this.title,
+    this.description = '', required this.deadline,
+    this.priority = TaskPriority.medium, this.category = TaskCategory.assignment,
+    this.isCompleted = false, this.progress = 0.0,
+    this.subtasks = const [], this.imageUrl, this.gradeWeight = 0,
+    this.location, required this.createdAt, required this.updatedAt,
   });
 
-  // Smart score: urgency 50% + priority 30% + grade weight 20%
   double get smartScore {
     final h = deadline.difference(DateTime.now()).inHours;
     final urgency = h <= 0 ? 100.0 : (1000 / (h + 1)).clamp(0.0, 100.0);
@@ -60,10 +62,7 @@ class TaskModel {
     final n = DateTime.now();
     return deadline.year == n.year && deadline.month == n.month && deadline.day == n.day;
   }
-  bool get isDueSoon {
-    final h = deadline.difference(DateTime.now()).inHours;
-    return h > 0 && h <= 24;
-  }
+  bool get isDueSoon { final h = deadline.difference(DateTime.now()).inHours; return h > 0 && h <= 24; }
   double get subtaskProgress {
     if (subtasks.isEmpty) return progress;
     return subtasks.where((s) => s.isDone).length / subtasks.length;
@@ -73,14 +72,14 @@ class TaskModel {
     String? id, String? userId, String? title, String? description, DateTime? deadline,
     TaskPriority? priority, TaskCategory? category, bool? isCompleted, double? progress,
     List<SubTask>? subtasks, String? imageUrl, int? gradeWeight,
-    DateTime? createdAt, DateTime? updatedAt,
+    TaskLocation? location, DateTime? createdAt, DateTime? updatedAt,
   }) => TaskModel(
     id: id ?? this.id, userId: userId ?? this.userId, title: title ?? this.title,
     description: description ?? this.description, deadline: deadline ?? this.deadline,
     priority: priority ?? this.priority, category: category ?? this.category,
     isCompleted: isCompleted ?? this.isCompleted, progress: progress ?? this.progress,
     subtasks: subtasks ?? this.subtasks, imageUrl: imageUrl ?? this.imageUrl,
-    gradeWeight: gradeWeight ?? this.gradeWeight,
+    gradeWeight: gradeWeight ?? this.gradeWeight, location: location ?? this.location,
     createdAt: createdAt ?? this.createdAt, updatedAt: updatedAt ?? this.updatedAt,
   );
 
@@ -90,6 +89,7 @@ class TaskModel {
     'category': category.index, 'isCompleted': isCompleted, 'progress': progress,
     'subtasks': subtasks.map((s) => s.toMap()).toList(),
     'imageUrl': imageUrl, 'gradeWeight': gradeWeight,
+    'location': location?.toMap(),
     'createdAt': Timestamp.fromDate(createdAt), 'updatedAt': Timestamp.fromDate(updatedAt),
   };
 
@@ -105,6 +105,7 @@ class TaskModel {
         .map((s) => SubTask.fromMap(s as Map<String, dynamic>)).toList(),
     imageUrl: m['imageUrl'],
     gradeWeight: m['gradeWeight'] ?? 0,
+    location: m['location'] != null ? TaskLocation.fromMap(m['location'] as Map<String, dynamic>) : null,
     createdAt: (m['createdAt'] as Timestamp).toDate(),
     updatedAt: (m['updatedAt'] as Timestamp).toDate(),
   );
