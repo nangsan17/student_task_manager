@@ -7,7 +7,7 @@ A cross-platform Flutter mobile application for university student productivity,
 ## Group Members
 | Name | Student ID | Role |
 |------|-----------|------|
-| Nang Thet Htar San | TP084170 | Lead Flutter Developer / Firebase Architect | Documentation Lead |
+| Nang Thet Htar San | TP084170 | Lead Flutter Developer / Firebase Architect / Documentation Lead |
 | Nour Mohamed Mahmoud | TP081664 | UI/UX Developer / Testing |
 
 ## Features
